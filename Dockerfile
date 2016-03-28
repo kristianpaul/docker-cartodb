@@ -176,6 +176,7 @@ RUN git clone https://github.com/CartoDB/data-services &&\
   createdb -U postgres -E UTF8 -O geocoder geocoder &&\
   echo 'CREATE EXTENSION plpythonu;CREATE EXTENSION postgis;CREATE EXTENSION cartodb;CREATE EXTENSION cdb_geocoder;CREATE EXTENSION plproxy;CREATE EXTENSION cdb_dataservices_server;CREATE EXTENSION cdb_dataservices_client;' | psql -U geocoder geocoder &&\
   service postgresql stop
+RUN echo 127.0.1.1 cartodb.localhost >> /etc/hosts
 # Copy confs
 ADD ./config/CartoDB-dev.js \
       /CartoDB-SQL-API/config/environments/development.js
@@ -183,6 +184,7 @@ ADD ./config/WS-dev.js \
       /Windshaft-cartodb/config/environments/development.js
 ADD ./config/app_config.yml /cartodb/config/app_config.yml
 ADD ./config/database.yml /cartodb/config/database.yml
+ADD .config/cartodb.nginx.proxy.conf /etc/nginx/conf.d/cartodb.nginx.proxy.nginx.conf
 ADD ./create_dev_user /cartodb/script/create_dev_user
 ADD ./setup_organization.sh /cartodb/script/setup_organization.sh
 ENV PATH /usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
